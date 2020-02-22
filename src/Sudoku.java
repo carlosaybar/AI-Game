@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -14,7 +15,7 @@ import java.util.Random;
 public class Sudoku {
     public int[][] grid;
     public int gridGenerated;
-
+	ArrayList<Integer>puzzle = new ArrayList<Integer>();
     /**
      * Constructs an instance of the Sudoku class
      */
@@ -49,15 +50,31 @@ public class Sudoku {
      * @throws IOException handles common input/output exception
      */
     public int[][] readPuzzle(String filePath)throws IOException {
-        grid = new int[9][9]; // initializes 2D array
+    	
+	     Scanner inputFile = new Scanner(filePath); // reads from .txt file
+	        
+		FileWriter fileWriter = new FileWriter(filePath , true);
+		Scanner sc = new Scanner (new File(filePath));
+		int loadUsers = 0;
+		while(sc.hasNextInt())
+		{
+			puzzle.add(sc.nextInt());
+		}
+	    sc.close();
+    	
+		int totalNumbers = ((puzzle).size()); 
+		int size = (int) Math.sqrt(totalNumbers); //does the square root of the arraylist in order to get the size of row and col
+    	
+        grid = new int[size][size]; // initializes 2D array
 
         File file = new File(filePath); // creates a file object containing the .txt file
-        Scanner inputFile = new Scanner(file); // reads from .txt file
 
         // initializes each element of grid[i][j] from the .txt file
-        for(int j = 0; j < 9; j++){
-            for(int i = 0; i < 9; i++){
-                grid[i][j] = inputFile.nextInt();
+        int h = 0;
+        for(int j = 0; j < size; j++){
+            for(int i = 0; i < size; i++){
+                grid[i][j] = puzzle.get(h);
+                h++;
             }
         }
 
