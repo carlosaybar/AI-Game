@@ -5,7 +5,7 @@ public class AIGame {
 
 	private String version;
 	protected int[][] grid;
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException, IOException {
 		// TODO Auto-generated method stub
 
 	}

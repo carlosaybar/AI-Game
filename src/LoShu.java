@@ -10,8 +10,11 @@
  */
 
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class LoShu extends AIGame {
@@ -22,16 +25,18 @@ public class LoShu extends AIGame {
 	}
 
 	static int [] [] grid = {{0 , 0}};
-	static String sequence;
 	static int [] arrayOfInts;
-	
+	static 	ArrayList<Integer>puzzle = new ArrayList<Integer>();
 	/**
 	 * here in the main method, i call all the other methods declared below
 	 * @param args the arguments in the main method
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
 	 */
-	public static void main(String [] args)
+	public static void main(String [] args) throws FileNotFoundException, IOException
 	{
-		sequence(); //calls the sequence method from below
+		String filePath = "C:\\Users\\Missions\\Desktop\\sudoku.txt";//args[0];
+		readFile(); //calls the sequence method from below
 		setArray(); // calls the setArray method
 		checkIfLoShu(); // calls the checkIfLoShu method
 	}
@@ -40,26 +45,26 @@ public class LoShu extends AIGame {
 	 *in the following method the user inputs the sequence as a string
 	 *the program converts each character in the sequence into an integer
 	 *and stores them in an array called arrayOfInts
+	 * @throws IOException, fileNotFoundException 
 	 */
-	public static void sequence()
+	public static void readFile() throws IOException, FileNotFoundException
 	{
-		Scanner input = new Scanner(System.in);
-		System.out.println("please enter a sequence of nine numbers: ");
-		sequence = input.nextLine();
-		arrayOfInts = new int[sequence.length()]; //sets the length of the arrayOfInts array to the string Sequence
-		
-	    grid = new int [3][3]; //sets the size of the grid to 3x3
-		
-	    
-	    /*
-	     * this for loop devides the string sequence into characters and
-	     * converts each one into integers
-	     */
-	    int i;
-		for(i = 0; i < sequence.length(); i++){
-			arrayOfInts[i] = Integer.parseInt(String.valueOf(sequence.charAt(i))); 
-		    System.out.println(arrayOfInts[i]);
+
+	   
+		String filePath = "C:\\Users\\Missions\\Desktop\\LoShu.txt";//args[0];
+       // String file = new File(filePath); // creates a file object containing the .txt file
+        Scanner inputFile = new Scanner(filePath); // reads from .txt file
+        
+		FileWriter fileWriter = new FileWriter(filePath , true);
+		Scanner sc = new Scanner (new File(filePath));
+		int loadUsers = 0;
+		while(sc.hasNextInt())
+		{
+			puzzle.add(sc.nextInt());
 		}
+        sc.close(); // closes the Scanner object
+		
+
 
 		
 	}
@@ -73,25 +78,30 @@ public class LoShu extends AIGame {
 	public static void setArray()
 	{
 		
-		/*
-		 * the first two for loops iterates through the rows and colums of the grid array
-		 * and fills each possition with the appropriate number
-		 */
-		for(int row = 0; row <3; row++) 
+		int totalNumbers = ((puzzle).size()); 
+		int size = (int) Math.sqrt(totalNumbers); //does the square root of the arraylist in order to get the size of row and col
+		 grid = new int [size][size]; //sets the size of the grid to 3x3
+        // initializes each element of grid[i][j] from the .txt file
+		int i =0;
+        for(int y = 0; y < size; y++){
+            for(int x = 0; x < size; x++)
+            {
+                    grid[y][x] = puzzle.get(i);
+                    i++;
+            }
+
+        }
+
+
+		for(int row = 0; row < grid.length; row++)
 		{
-			for(int col = 0; col <3; col++)
+			for(int col = 0; col < grid.length; col++)
 			{
-				for (int i = 0; i < sequence.length(); i++) //iterates through the sequence of numbers
-				{
-				grid[row][col] = arrayOfInts[i]; //writing the numbers from array into the grid
-				i++;
-				}
-				System.out.println(grid);
+
+					System.out.print(grid[row][col] + " "); //prints all the integers from every position in the grid the proper format
+			}
+			System.out.print("\n");
 		}
-
-
-	}	
-		
 	}
 	
 	/**
@@ -121,11 +131,3 @@ public class LoShu extends AIGame {
 
 }
 }
-
-/*
- *Error Report: I was unable to figure out how to write the elements of the array arrayOfInts 
- *into the two dimensional array grid [] []
- *for some reason I am only writing the address where each specific element is located
- *this issue hinders my program from accurately determining what is a Lo Shu magic square and
- *what is not.
-*/

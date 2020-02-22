@@ -30,7 +30,7 @@ public class Sudoku {
      * @throws FileNotFoundException
      */
     public static void main(String[] args) throws IOException, FileNotFoundException {
-        String filePath = "C:\\Users\\louis\\Desktop\\sudoku1.txt";//args[0];
+        String filePath = "C:\\Users\\Missions\\Desktop\\sudoku.txt";//args[0];
 
         Sudoku sudoku1 = new Sudoku(filePath);
 
