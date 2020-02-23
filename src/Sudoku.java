@@ -1,4 +1,5 @@
-//package com.company;
+package com.company;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Scanner;
@@ -12,26 +13,39 @@ import java.util.Random;
 /**
  * @class Sudoku Creates a Sudoku object using 2D arrays and array lists
  */
-public class Sudoku {
+public class Sudoku extends AIGame{
     public int[][] grid;
     public int gridGenerated;
-	ArrayList<Integer>puzzle = new ArrayList<Integer>();
+    ArrayList<Integer>puzzle = new ArrayList<Integer>();
+
+    /**
+     * loads file into grid
+     * @param filePath
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public Sudoku(String filePath) throws FileNotFoundException, IOException {
+        super(filePath);
+        readPuzzle(filePath);
+        gridGenerated = 0;
+    }
+
     /**
      * Constructs an instance of the Sudoku class
      */
-    public Sudoku(String filePath)throws IOException {
-        readPuzzle(filePath);
-        gridGenerated = 0; // counts how many grids generated to find solution
-    }
-    
+//    public Sudoku(String filePath)throws IOException {
+//        readPuzzle(filePath);
+//        gridGenerated = 0; // counts how many grids generated to find solution
+//    }
+
     /**
-     * 
+     *
      * @param args
      * @throws IOException
      * @throws FileNotFoundException
      */
     public static void main(String[] args) throws IOException, FileNotFoundException {
-        String filePath = "C:\\Users\\Missions\\Desktop\\sudoku.txt";//args[0];
+        String filePath = args[0];
 
         Sudoku sudoku1 = new Sudoku(filePath);
 
@@ -50,21 +64,21 @@ public class Sudoku {
      * @throws IOException handles common input/output exception
      */
     public int[][] readPuzzle(String filePath)throws IOException {
-    	
-	     Scanner inputFile = new Scanner(filePath); // reads from .txt file
-	        
-		FileWriter fileWriter = new FileWriter(filePath , true);
-		Scanner sc = new Scanner (new File(filePath));
-		int loadUsers = 0;
-		while(sc.hasNextInt())
-		{
-			puzzle.add(sc.nextInt());
-		}
-	    sc.close();
-    	
-		int totalNumbers = ((puzzle).size()); 
-		int size = (int) Math.sqrt(totalNumbers); //does the square root of the arraylist in order to get the size of row and col
-    	
+
+        Scanner inputFile = new Scanner(filePath); // reads from .txt file
+
+        FileWriter fileWriter = new FileWriter(filePath , true);
+        Scanner sc = new Scanner (new File(filePath));
+        int loadUsers = 0;
+        while(sc.hasNextInt())
+        {
+            puzzle.add(sc.nextInt());
+        }
+        sc.close();
+
+        int totalNumbers = ((puzzle).size());
+        int size = (int) Math.sqrt(totalNumbers); //does the square root of the arraylist in order to get the size of row and col
+
         grid = new int[size][size]; // initializes 2D array
 
         File file = new File(filePath); // creates a file object containing the .txt file
@@ -255,7 +269,7 @@ public class Sudoku {
                     toString();
                 }
                 if(isNull){
-                  break;
+                    break;
                 }
 
             }
