@@ -1,7 +1,7 @@
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class AIGame {
+public abstract class AIGame {
 
 	private String version;
 	protected int[][] grid;
