@@ -1,4 +1,4 @@
-package com.company;
+//package com.company;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -293,13 +293,15 @@ public class Sudoku extends AIGame{
      * @return null
      */
     public String toString(){
-        for(int j = 0; j < 9; j++)
-            for(int i = 0; i < 9; i++){
-                System.out.print(grid[i][j] + " ");
-                if(i == 8){
-                    System.out.println();
-                }
-            }
+		for(int row = 0; row < grid.length; row++)
+		{
+			for(int col = 0; col < grid.length; col++)
+			{
+
+					System.out.print(grid[row][col] + " "); //prints all the integers from every position in the grid in a 9 by 9 format
+			}
+			System.out.print("\n");
+		}
         return null;
     }
 
