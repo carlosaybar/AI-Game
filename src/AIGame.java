@@ -5,10 +5,7 @@ public abstract class AIGame {
 
 	private String version;
 	protected int[][] grid;
-	public static void main(String[] args) throws FileNotFoundException, IOException {
-		// TODO Auto-generated method stub
-
-	}
+	public abstract void main(String[] args) throws FileNotFoundException, IOException;
 	
 	/**
 	 * loads file into grid
