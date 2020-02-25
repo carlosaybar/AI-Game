@@ -29,22 +29,22 @@ public class LoShu extends AIGame {
 	static int [] [] grid = {{0 , 0}};
 	static int [] arrayOfInts;
 	static 	ArrayList<Integer>puzzle = new ArrayList<Integer>();
+	static int size;
+	static String filePath = "C:\\Users\\Missions\\Desktop\\LoShu.txt";
 	/**
 	 * here in the main method, i call all the other methods declared below
 	 * @param args the arguments in the main method
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public static void main(String [] args) throws FileNotFoundException, IOException
-	{
-		String FilePath = "C:\\Users\\Missions\\Desktop\\LoShu.txt";
-		LoShu lo = new LoShu(FilePath);
-		String filePath = "C:\\Users\\Missions\\Desktop\\LoShu.txt";//args[0];
-		readFile(); //calls the sequence method from below
-		setArray(); // calls the setArray method
-		lo.solve();
-		checkIfLoShu(); // calls the checkIfLoShu method
-	}
+	public static void main(String []args) throws FileNotFoundException, IOException{
+
+		LoShu lo = new LoShu(filePath);
+		readFile();
+		//setArray();
+		lo.solve();//lo rellenamos
+		lo.toString();
+		}
 	
 	/**
 	 *in the following method the user inputs the sequence as a string
@@ -56,7 +56,7 @@ public class LoShu extends AIGame {
 	{
 
 	   
-		String filePath = "C:\\Users\\Missions\\Desktop\\LoShu.txt";//args[0];
+//args[0];
        // String file = new File(filePath); // creates a file object containing the .txt file
         Scanner inputFile = new Scanner(filePath); // reads from .txt file
         
@@ -69,9 +69,9 @@ public class LoShu extends AIGame {
 		}
         sc.close(); // closes the Scanner object
 		
-
-
-		
+		int totalNumbers = ((puzzle).size()); 
+		size = (int) Math.sqrt(totalNumbers); //does the square root of the arraylist in order to get the size of row and col
+		grid = new int [size][size]; //sets the size of the grid to 3x3	
 	}
 	
 	
@@ -96,218 +96,63 @@ public class LoShu extends AIGame {
             }
 
         }
+	}
 
+	/**
+	 * 
+	 */
+	public int [][] solve(){
 
-		for(int row = 0; row < grid.length; row++)
-		{
-			for(int col = 0; col < grid.length; col++)
-			{
+	int col = size/2;
+	int row = 0;
+	int next_col = 0;
+	int next_row = 0;
 
-					System.out.print(grid[row][col] + " "); //prints all the integers from every position in the grid the proper format
-			}
-			System.out.print("\n");
+	grid[row][col]= 1;
+	
+	for(int i = 2; i <= size*size;i++){
+		if (row-1<0){
+			row = size-1;
+		}else{
+			row = row-1;
+		}
+		if (col+1 > size-1){ //after the you have filled a position in the last column...
+			col = 0;		 //it will start the next row, going back to colum 0
+		}else{
+			col = col+1; //otherwise it will go to the next position in the row, one colum over
+		}
+		if (grid[row][col] == 0){
+			grid[row][col] = i;
+			next_row = row; 
+			next_col = col;//stores the last position filled
+		}
+		else{
+			row = next_row + 1;
+			col = next_col;//goes back to the last position filled
+			grid[row][col] = i;
 		}
 	}
-	
+	return grid;
 
-    /**
-     * Filters elements per row and column from a list of all possible values
-     * @param row is used as a location parameter on a 2D array
-     * @param col is used as a location parameter on a 2D array
-     * @return candidates a filtered array of valid candidates per element [row,col]
-     */
-    public ArrayList<Integer> getCandidates(int row, int col){
-        int[] options = {1,2,3,4,5,6,7,8,9}; // list of all possible values in a sudoku square
-        ArrayList candidates = new ArrayList<Integer>(); // ArrayList that holds Integer objects
-
-        // adds each element of value[] into ArrayList candidates
-        for(int o: options){
-            candidates.add(o);
-        }
-
-        // searches the row for candidates
-        for(int j = 0; j < grid.length; j++){
-            if (candidates.contains(grid[row][j])) {
-                candidates.remove(new Integer(grid[row][j])); // filters candidates by row
-            }
-        }
-
-        // searches the column for candidates
-        for(int i = 0; i < grid.length; i++){
-            if (candidates.contains(grid[i][col])){
-                candidates.remove(new Integer(grid[i][col]));// filters candidates by col
-            }
-        }
-
-        // checks the subgrid for candidates
-        int subRow = row - row % 3;
-        int subCol = col - col % 3;
-
-        for(int j = subRow; j < subRow + 3; j++){
-            for(int i = subCol; i < subCol + 3; i++){
-                if(candidates.contains(grid[i][j])){
-                    candidates.remove(new Integer(grid[i][j])); // filters candidates by subgrid
-                }
-            }
-        }
-        return candidates;
-    }
-	
-	
-    public boolean isRowValid(int row){
-        boolean rowCheck = false; //defaults to false
-        int[] options = {1,2,3,4,5,6,7,8,9};
-        ArrayList rowValues = new ArrayList<Integer>();
-        ArrayList candidates = new ArrayList<Integer>();
-
-        // adds each element of value[] into ArrayList candidates
-        for(int v: options){
-            candidates.add(v);
-        }
-
-        for(int i = 0; i < grid.length; i++){
-            rowValues.add(new Integer(grid[row][i]));
-        }
-
-        // sorts subGridValues so that we can utilize ArrayList.equals() which compares 2 objects
-        Collections.sort(rowValues);
-
-        if(rowValues.equals(candidates)){
-            rowCheck = true; // if rowValues contains each value of candidates then set this to true
-        }
-
-        return rowCheck;
-    }
-
-    /**
-     * Checks the entire column to see if an element occurs more than once, since there are 9 possible elements and 9
-     * available spots, that means in a valid row, for each element to appear, it should only appear once
-     * @param col is used as a location parameter on a 2D array
-     * @return colCheck true if column is valid
-     */
-    public boolean isColValid(int col){
-        boolean colCheck = false;
-        int[] options = {1,2,3,4,5,6,7,8,9};
-        ArrayList candidates = new ArrayList<Integer>();
-        ArrayList colValues = new ArrayList<Integer>();
-
-        // adds each element of value[] into ArrayList candidates
-        for(int v: options){
-            candidates.add(v);
-        }
-
-        for(int i = 0; i < grid.length; i++){
-            colValues.add(new Integer(grid[i][col]));
-        }
-
-        // sorts subGridValues so that we can utilize ArrayList.equals() which compares 2 objects
-        Collections.sort(colValues);
-
-        if(colValues.equals(candidates)){
-            colCheck = true;
-        }
-
-        return colCheck;
-    }
-	
-
-    /**
-     * Incorporates Class Sudoku to try and solve the puzzle
-     * @return grid[][] which should hopefully be completed
-     */
-    public int[][] solve(){
-        Random randint = new Random();
-        int index = 0;
-        boolean isComplete;
-
-        do{
-            isComplete = true;
-            boolean isNull = false;
-            for(int j = 0; j < grid.length; j++){
-                for(int i = 0; i < grid.length; i++){
-                	ArrayList<Integer> currentCandidates = new ArrayList<Integer>();
-
-                    if(grid[i][j] == 0){
-                        currentCandidates = getCandidates(i,j);
-                        if(currentCandidates.size() == 0){
-                            isNull = true;
-                            break;
-                        }
-                        index = randint.nextInt(currentCandidates.size());
-                        grid[i][j] = currentCandidates.get(index);
-                        toString();
-                      
-                    }
-
-                    System.out.println();
-                    //System.out.print(grid[j][i]);
-                    toString();                   
-                }
-                if(isNull){
-                  break;
-                }
-
-            }
-
-            for(int j = 0; j < grid.length; j++){
-                for(int i = 0; i < grid.length; i++){
-                    if(grid[i][j] == 0) 
-                    {
-                        isComplete = false;
-                    }
-                }
-            }
-        } while(!isComplete);
-
-
-        return grid;
-    }
-	
-    /**
-     * Prints the sudoku grid
-     * @return null
-     */
-    public String toString(){
-    	System.out.println();
+	}
+		
+	public String toString(){
+		System.out.println();
 		for(int row = 0; row < grid.length; row++)
 		{
 			for(int col = 0; col < grid.length; col++)
 			{
 
-					System.out.print(grid[row][col] + " "); //prints all the integers from every position in the grid in a 9 by 9 format
+				System.out.print(grid[row][col] + "\t"); //prints all the integers from every position in the grid in a 9 by 9 format
 			}
 			System.out.print("\n");
 		}
-        return null;
-    }
-	
-	/**
-	 * here I check to see if the sum of the rows, columns, and diagonals are equal
-	 * if they are equal, the program will output a message saying that it is a Lo Shu Square
-	 * @return
-	 * @throws IOException 
-	 * @throws FileNotFoundException 
-	 */
-	public static boolean checkIfLoShu() throws FileNotFoundException, IOException {
-		String FilePath = "C:\\Users\\Missions\\Desktop\\LoShu.txt";
-		LoShu lo = new LoShu(FilePath);
-		/*
-		 * this if statement checks to see if the sum of the columns, rows, and diagonals are equal
-		 */
-        if( grid [0][0] + grid[1][0] + grid[2][0] == grid [0][1] + grid[1][1] + grid[2][1] &&
-        	grid [0][1] + grid[1][1] + grid[2][1] == grid [0][2] + grid[1][2] + grid[2][2] &&
-			grid [0][0] + grid[0][1] + grid[0][2] ==  grid [1][0] + grid[1][1] + grid[1][2] && 
-			grid [1][0] + grid[1][1] + grid[1][2] == grid [2][0] + grid[2][1] + grid[2][2] && 
-		 	 grid [0][0] + grid[1][1] + grid[2][2] == grid [2][0] + grid[1][1] + grid[0][2])  
-        {
-        	System.out.println("this is a shu magic square");
-            return true;
-        }
-        else
-        {
-        	System.out.println("this is a not a shu magic square");
-        }
-		return false;
+		return null;
+	}
 
-}
+	@Override
+	public String toString(int[][] grid) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
