@@ -1,5 +1,3 @@
-//package com.company;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Scanner;
@@ -16,6 +14,7 @@ import java.util.Random;
 public class Sudoku extends AIGame{
     public int[][] grid;
     public int gridGenerated;
+    public int[][] tempGrid;
     ArrayList<Integer>puzzle = new ArrayList<Integer>();
 
     /**
@@ -32,20 +31,13 @@ public class Sudoku extends AIGame{
 
     /**
      * Constructs an instance of the Sudoku class
-     */
-//    public Sudoku(String filePath)throws IOException {
-//        readPuzzle(filePath);
-//        gridGenerated = 0; // counts how many grids generated to find solution
-//    }
-
-    /**
-     *
      * @param args
      * @throws IOException
      * @throws FileNotFoundException
      */
+
     public static void main(String[] args) throws IOException, FileNotFoundException {
-        String filePath = args[0];
+        String filePath = "C:\\Users\\Louis\\Desktop\\sudoku1.txt"; //args[0];
 
         Sudoku sudoku1 = new Sudoku(filePath);
 
@@ -80,7 +72,7 @@ public class Sudoku extends AIGame{
         int size = (int) Math.sqrt(totalNumbers); //does the square root of the arraylist in order to get the size of row and col
 
         grid = new int[size][size]; // initializes 2D array
-
+        tempGrid = new int [size][size];
         File file = new File(filePath); // creates a file object containing the .txt file
 
         // initializes each element of grid[i][j] from the .txt file
@@ -248,60 +240,61 @@ public class Sudoku extends AIGame{
         boolean isComplete;
 
         do{
-            isComplete = true;
-            boolean isNull = false;
             for(int j = 0; j < grid.length; j++){
                 for(int i = 0; i < grid.length; i++){
+                    tempGrid[i][j] = grid[i][j];
+                }
+            }
+            isComplete = true;
+            boolean isNull = false;
+            for(int j = 0; j < tempGrid.length; j++){
+                for(int i = 0; i < tempGrid.length; i++){
 
-                    if(grid[i][j] == 0){
+                    if(tempGrid[i][j] == 0){
                         ArrayList<Integer> currentCandidates = getCandidates(i,j);
                         if(currentCandidates.size() == 0){
                             isNull = true;
                             break;
                         }
                         index = randint.nextInt(currentCandidates.size());
-                        grid[i][j] = currentCandidates.get(index);
-                        toString();
+                        tempGrid[i][j] = currentCandidates.get(index);
                     }
-
-                    System.out.println();
-                    //System.out.print(grid[j][i]);
-                    toString();
                 }
                 if(isNull){
                     break;
                 }
-
             }
 
-            for(int j = 0; j < grid.length; j++){
-                for(int i = 0; i < grid.length; i++){
-                    if(grid[i][j] == 0){
+            for(int j = 0; j < tempGrid.length; j++){
+                for(int i = 0; i < tempGrid.length; i++){
+                    if(tempGrid[i][j] == 0){
                         isComplete = false;
                     }
                 }
             }
-            System.out.println("Grids Generated: " +gridGenerated);
+            System.out.println("Grids Generated: " + gridGenerated);
+            toString(tempGrid);
+            System.out.println();
+
             gridGenerated++;
         } while(!isComplete);
 
-        return grid;
+        return tempGrid;
     }
 
     /**
      * Prints the sudoku grid
      * @return null
      */
-    public String toString(){
-		for(int row = 0; row < grid.length; row++)
-		{
-			for(int col = 0; col < grid.length; col++)
-			{
-
-					System.out.print(grid[row][col] + " "); //prints all the integers from every position in the grid in a 9 by 9 format
-			}
-			System.out.print("\n");
-		}
+    @Override
+    public String toString(int[][] tempGrid){
+        for(int j = 0; j < 9; j++)
+            for(int i = 0; i < 9; i++){
+                System.out.print(tempGrid[i][j] + " ");
+                if(i == 8){
+                    System.out.println();
+                }
+            }
         return null;
     }
 
