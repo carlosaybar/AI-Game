@@ -37,7 +37,7 @@ public class Sudoku extends AIGame{
      */
 
     public static void main(String[] args) throws IOException, FileNotFoundException {
-        String filePath = "C:\\Users\\Louis\\Desktop\\sudoku1.txt"; //args[0];
+        String filePath = args[0];
 
         Sudoku sudoku1 = new Sudoku(filePath);
 
@@ -104,16 +104,16 @@ public class Sudoku extends AIGame{
         }
 
         // searches the row for candidates
-        for(int j = 0; j < grid.length; j++){
-            if (candidates.contains(grid[row][j])) {
-                candidates.remove(new Integer(grid[row][j])); // filters candidates by row
+        for(int j = 0; j < tempGrid.length; j++){
+            if (candidates.contains(tempGrid[row][j])) {
+                candidates.remove(new Integer(tempGrid[row][j])); // filters candidates by row
             }
         }
 
         // searches the column for candidates
-        for(int i = 0; i < grid.length; i++){
-            if (candidates.contains(grid[i][col])){
-                candidates.remove(new Integer(grid[i][col]));// filters candidates by col
+        for(int i = 0; i < tempGrid.length; i++){
+            if (candidates.contains(tempGrid[i][col])){
+                candidates.remove(new Integer(tempGrid[i][col]));// filters candidates by col
             }
         }
 
@@ -123,8 +123,8 @@ public class Sudoku extends AIGame{
 
         for(int j = subRow; j < subRow + 3; j++){
             for(int i = subCol; i < subCol + 3; i++){
-                if(candidates.contains(grid[i][j])){
-                    candidates.remove(new Integer(grid[i][j])); // filters candidates by subgrid
+                if(candidates.contains(tempGrid[i][j])){
+                    candidates.remove(new Integer(tempGrid[i][j])); // filters candidates by subgrid
                 }
             }
         }
