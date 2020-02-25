@@ -1,12 +1,11 @@
 /*
  Carlos Aybar
  Intro to Java
- 01/09/20
- This program asks the user for a sequence of nine numbers
- then its separates the nine numbers into individual integers
- and stores them in an array, from that array I pass the numbers
- into a two dimensional grid and then check to see if the sequence
- is a magic square or not
+ 02/24/20
+ This program reads a puzzle from a txt file and 
+ stores them in a two dimensional array called grid, 
+ the program then fills in every possision with the 
+ appropriate numbers to get a magic square
  */
 
 
@@ -20,8 +19,16 @@ import java.util.Collections;
 import java.util.Random;
 import java.util.Scanner;
 
+/**
+ * the goal of this program is to read a puzzle 
+ * from a txt and generate a magic square filling in
+ * the empty posisions in the grid
+ * @author Louis and Carlos
+ *
+ */
 public class LoShu extends AIGame {
 	
+
 	public LoShu(String filePath) throws FileNotFoundException, IOException {
 		super(filePath);
 	}
@@ -38,11 +45,11 @@ public class LoShu extends AIGame {
 	 * @throws FileNotFoundException 
 	 */
 	public static void main(String []args) throws FileNotFoundException, IOException{
-
+		//String filePath = args[0];
 		LoShu lo = new LoShu(filePath);
 		readFile();
-		//setArray();
-		lo.solve();//lo rellenamos
+		setArray();
+		lo.solve();
 		lo.toString();
 		}
 	
@@ -98,44 +105,54 @@ public class LoShu extends AIGame {
         }
 	}
 
+
+
 	/**
-	 * 
+	 * this solve method access the size of a puzzle form the txt file
+	 * then it generates a new grid with the same dimenssions and 
+	 * fills in the possition in a way that it ends up being a magic square
 	 */
 	public int [][] solve(){
+		/*
+		 * NOTE: some of the ideas implemented in this method were obtained online
+		 */
+		int col = size/2;
+		int row = 0;
+		int next_col = 0;
+		int next_row = 0;
 
-	int col = size/2;
-	int row = 0;
-	int next_col = 0;
-	int next_row = 0;
+		grid[row][col] = 1;
 
-	grid[row][col]= 1;
-	
-	for(int i = 2; i <= size*size;i++){
-		if (row-1<0){
-			row = size-1;
-		}else{
-			row = row-1;
+		for(int i = 2; i <= size*size;i++){
+			if (row-1<0){
+				row = size-1; 
+			}else{
+				row = row-1;
+			}
+			if (col+1 > size-1){ //after the you have filled a position in the last column...
+				col = 0;		 //it will start the next row, going back to colum 0
+			}else{
+				col = col+1; //otherwise it will go to the next position in the row, one colum over
+			}
+			if (grid[row][col] == 0){
+				grid[row][col] = i;
+				next_row = row; 
+				next_col = col;//stores the last position filled
+			}
+			else{
+				row = next_row + 1;
+				col = next_col;//goes back to the last position filled
+				grid[row][col] = i; //sets the current position equals to i
+			}
 		}
-		if (col+1 > size-1){ //after the you have filled a position in the last column...
-			col = 0;		 //it will start the next row, going back to colum 0
-		}else{
-			col = col+1; //otherwise it will go to the next position in the row, one colum over
-		}
-		if (grid[row][col] == 0){
-			grid[row][col] = i;
-			next_row = row; 
-			next_col = col;//stores the last position filled
-		}
-		else{
-			row = next_row + 1;
-			col = next_col;//goes back to the last position filled
-			grid[row][col] = i;
-		}
-	}
-	return grid;
+		return grid;
 
 	}
 		
+	   /**
+     * Prints the lo shu grid
+     * @return null
+     */
 	public String toString(){
 		System.out.println();
 		for(int row = 0; row < grid.length; row++)
